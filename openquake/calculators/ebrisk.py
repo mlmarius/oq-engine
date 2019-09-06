@@ -41,7 +41,8 @@ def start_ebrisk(rupgetter, srcfilter, param, monitor):
     """
     Launcher for ebrisk tasks
     """
-    rupgetters = rupgetter.split(srcfilter)
+    with monitor('weighting RuptureGetters', measuremem=True):
+        rupgetters = rupgetter.split(srcfilter)
     if rupgetters:
         yield from parallel.split_task(
             ebrisk, rupgetters, srcfilter, param, monitor,

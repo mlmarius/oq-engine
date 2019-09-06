@@ -96,6 +96,7 @@ class SourceFilterTestCase(unittest.TestCase):
         sites = srcfilter.get_close_sites(src)
         self.assertIsNotNone(sites)
 
+
 # from https://groups.google.com/d/msg/openquake-users/P03SxJsfW_s/nCdcxj8WAAAJ
 characteric_source = '''\
 <?xml version="1.0" encoding="utf-8"?>
