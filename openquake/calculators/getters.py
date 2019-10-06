@@ -482,7 +482,7 @@ class RuptureGetter(object):
         self.num_events = n_occ if samples > 1 else n_occ * sum(
             len(rlzs) for rlzs in rlzs_by_gsim.values())
 
-    def split(self, srcfilter):
+    def split(self):
         """
         :returns: a list of RuptureGetters with 1 rupture each
         """
@@ -498,10 +498,8 @@ class RuptureGetter(object):
             rg.rlzs_by_gsim = self.rlzs_by_gsim
             rg.e0 = numpy.array([self.e0[i]])
             n_occ = array[i]['n_occ']
-            sids = srcfilter.close_sids(array[i], self.trt)
-            rg.weight = len(sids) * n_occ
-            if rg.weight:
-                out.append(rg)
+            rg.weight = n_occ
+            out.append(rg)
         return out
 
     @property
