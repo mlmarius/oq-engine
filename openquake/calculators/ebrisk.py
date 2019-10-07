@@ -46,9 +46,10 @@ def start_ebrisk(rupgetter, srcfilter, param, monitor):
     """
     Launcher for ebrisk tasks
     """
-    with hdf5.File(param['hdf5path'], 'r') as ds:
-        gtree = GeoTree(ds['assetcol/array']['lon', 'lat'])
-    rupgetters = rupgetter.split(gtree)
+    with monitor('weighting ruptures'):
+        with hdf5.File(param['hdf5path'], 'r') as ds:
+            gtree = GeoTree(ds['assetcol/array']['lon', 'lat'])
+        rupgetters = rupgetter.split(gtree)
     yield from parallel.split_task(
         ebrisk, rupgetters, srcfilter, param, monitor,
         duration=param['task_duration'])
