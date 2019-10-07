@@ -498,7 +498,7 @@ class RuptureGetter(object):
             rg.rlzs_by_gsim = self.rlzs_by_gsim
             rg.e0 = numpy.array([self.e0[i]])
             n_occ = array[i]['n_occ']
-            rg.weight = n_occ * (gtree.count_in_box(array[i]) + 1)
+            rg.weight = n_occ * numpy.sqrt(gtree.count_in_box(array[i]) + 1)
             out.append(rg)
         return out
 
