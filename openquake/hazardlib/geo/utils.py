@@ -79,7 +79,7 @@ class GeoTree(object):
             minlon %= 360
             maxlon %= 360
         radius = (maxlon - minlon) + (maxlat - minlat)
-        middle = ((maxlon + minlon) / 2, (maxlat - minlat) / 2)
+        middle = ((maxlon + minlon) / 2, (maxlat + minlat) / 2)
         return len(self.kdtree.query_ball_point(middle, radius, eps=.1))
 
 
