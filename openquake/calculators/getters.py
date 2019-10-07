@@ -482,7 +482,7 @@ class RuptureGetter(object):
         self.num_events = n_occ if samples > 1 else n_occ * sum(
             len(rlzs) for rlzs in rlzs_by_gsim.values())
 
-    def split(self):
+    def split(self, gtree):
         """
         :returns: a list of RuptureGetters with 1 rupture each
         """
@@ -498,7 +498,7 @@ class RuptureGetter(object):
             rg.rlzs_by_gsim = self.rlzs_by_gsim
             rg.e0 = numpy.array([self.e0[i]])
             n_occ = array[i]['n_occ']
-            rg.weight = n_occ
+            rg.weight = n_occ * (gtree.count_in_box(array[i]) + 1)
             out.append(rg)
         return out
 

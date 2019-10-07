@@ -21,6 +21,7 @@ import numpy
 
 from openquake.baselib import datastore, hdf5, parallel, general
 from openquake.baselib.python3compat import zip, encode
+from openquake.hazardlib.geo.utils import GeoTree
 from openquake.hazardlib.stats import set_rlzs_stats
 from openquake.risklib import riskmodels
 from openquake.risklib.scientific import losses_by_period, LossesByAsset
@@ -45,11 +46,12 @@ def start_ebrisk(rupgetter, srcfilter, param, monitor):
     """
     Launcher for ebrisk tasks
     """
-    rupgetters = rupgetter.split()
-    if rupgetters:
-        yield from parallel.split_task(
-            ebrisk, rupgetters, srcfilter, param, monitor,
-            duration=param['task_duration'])
+    with hdf5.File(param['hdf5path'], 'r') as ds:
+        gtree = GeoTree(ds['assetcol/array']['lon', 'lat'])
+    rupgetters = rupgetter.split(gtree)
+    yield from parallel.split_task(
+        ebrisk, rupgetters, srcfilter, param, monitor,
+        duration=param['task_duration'])
 
 
 def _calc_risk(hazard, param, monitor):

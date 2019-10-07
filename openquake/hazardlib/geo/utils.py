@@ -62,6 +62,27 @@ class SiteAssociationError(Exception):
     """Raised when there are no sites close enough"""
 
 
+class GeoTree(object):
+    def __init__(self, array):
+        self.lons = array['lon']
+        self.lats = array['lat']
+        if cross_idl(self.lons.min(), self.lons.max()):
+            self.lons %= 360
+        self.kdtree = cKDTree(numpy.vstack([self.lons, self.lats]).T)
+
+    def count_in_box(self, box):
+        minlat = box['minlat']
+        maxlat = box['maxlat']
+        minlon = box['minlon']
+        maxlon = box['maxlon']
+        if cross_idl(minlon, maxlon):
+            minlon %= 360
+            maxlon %= 360
+        radius = (maxlon - minlon) + (maxlat - minlat)
+        middle = ((maxlon + minlon) / 2, (maxlat - minlat) / 2)
+        return len(self.kdtree.query_ball_point(middle, radius, eps=.1))
+
+
 class _GeographicObjects(object):
     """
     Store a collection of geographic objects, i.e. objects with lons, lats.
